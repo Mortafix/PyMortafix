@@ -4,26 +4,23 @@ from datetime import datetime
 
 from colorifix.colorifix import Color, paint
 from emoji import emojize
-from telegram.utils.helpers import mention_markdown
 
 
 def standard_message(update, top_message, bot_name, bot_url):
-    user_mention = mention_markdown(
-        update.effective_chat.id,
-        update.effective_chat.username or update.effective_chat.first_name,
-    )
+    user_name = update.effective_chat.username or update.effective_chat.first_name
+    user_id = update.effective_chat.id
+    user_mention = f"[{user_name}](tg://user?id={user_id})"
     now = datetime.now()
     return emojize(
         f"{top_message}\n"
         f":robot_face: [{bot_name}]({bot_url})\n"
         f":calendar: {now:%d.%m.%Y}\n"
         f":eight_o’clock: {now:%H:%M}\n"
-        f":bust_in_silhouette: {user_mention} (`{update.effective_chat.id}`)\n"
+        f":bust_in_silhouette: {user_mention} (`{user_id}`)\n"
     )
 
 
 def send_log(bot, channel, message, document=None):
-
     if document:
         bot.send_document(
             channel,
