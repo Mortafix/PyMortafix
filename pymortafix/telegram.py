@@ -7,6 +7,7 @@ from emoji import emojize
 
 
 def standard_message(update, top_message, bot_name, bot_url):
+    """Build a standard log message"""
     user_name = update.effective_chat.username or update.effective_chat.first_name
     user_id = update.effective_chat.id
     user_mention = f"[{user_name}](tg://user?id={user_id})"
@@ -21,6 +22,7 @@ def standard_message(update, top_message, bot_name, bot_url):
 
 
 def send_log(bot, channel, message, document=None):
+    """Send a simple message to a channel"""
     if document:
         bot.send_document(
             channel,
@@ -42,6 +44,7 @@ def error_handler(
     extra_info=None,
     log=True,
 ):
+    """Log an error on terminal and a Telegram channel from a Telegram bot"""
     # error log on terminal
     user_data = (
         context.user_data.get(chat.id)
@@ -71,6 +74,7 @@ def error_handler(
 
 
 def not_authorized_handler(update, context, bot_name, bot_url, channel):
+    """Log an unauthorized access on a Telegram bot"""
     top_msg = ":face_with_symbols_on_mouth: *NO AUTH USER* :face_with_symbols_on_mouth:"
     message = standard_message(update, top_msg, bot_name, bot_url)
     send_log(context.bot, channel, message)
