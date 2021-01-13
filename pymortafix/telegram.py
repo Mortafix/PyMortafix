@@ -46,11 +46,7 @@ def error_handler(
 ):
     """Log an error on terminal and a Telegram channel from a Telegram bot"""
     # error log on terminal
-    user_data = (
-        context.user_data.get(chat.id)
-        if update and (chat := update.effective_chat)
-        else "None"
-    )
+    user_data = context.user_data if update else "None"
     trace = (exception and exception.__traceback__) or sys.exc_info()[2]
     traceback_error = "".join(traceback.format_tb(trace))
     traceback_msg = (
