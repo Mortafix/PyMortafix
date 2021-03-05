@@ -4,19 +4,17 @@ from colorifix.colorifix import erase
 from pymortafix._getchar import _Getch
 
 
-def _get_index_from_matching(matching):
-    return [i for i, group in enumerate(matching.groups()) if group][0]
+def get_sub_from_matching(dictionary, matching):
+    index = [i for i, group in enumerate(matching.groups()) if group]
+    matched = list(dictionary)[index[0]] if index else None
+    return dictionary.get(matched)
 
 
 def multisub(sub_dict, string, sequential=False):
     """Infinite sub in one iteration # sub_dict: {what_to_sub:substitution}"""
     if not sequential:
         rgx = "|".join(f"({s})" for s in sub_dict.keys())
-        return sub(
-            rgx,
-            lambda m: sub_dict.get(list(sub_dict)[_get_index_from_matching(m)]),
-            string,
-        )
+        return sub(rgx, lambda m: get_sub_from_matching(sub_dict, m), string)
     else:
         for rgx, substitution in sub_dict.items():
             string = sub(rgx, substitution, string)
