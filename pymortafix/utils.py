@@ -44,7 +44,7 @@ def strict_input(
     return inp
 
 
-def direct_input(choices):
+def direct_input(choices=None):
     """Get user single char input w/o return, with optional restricted choices"""
     inkey = _Getch()
     k = inkey()
