@@ -1,6 +1,7 @@
 from re import findall, match, sub
 
 from colorifix.colorifix import erase
+from pymortafix._getchar import _Getch
 
 
 def multisub(sub_dict, string):
@@ -28,3 +29,12 @@ def strict_input(
         if flush:
             erase(len(findall(r"\n", wrong_text or text)) + 1)
     return inp
+
+
+def direct_input(choices):
+    """Get user single char input w/o return, with optional restricted choices"""
+    inkey = _Getch()
+    k = inkey()
+    while choices and k not in choices:
+        k = inkey()
+    return k
