@@ -22,7 +22,7 @@ def multisub(sub_dict, string, sequential=False):
 
 
 def strict_input(
-    text, wrong_text=None, choices=None, regex=None, flush=False, check=None
+    text, wrong_text=None, choices=None, regex=None, check=None, flush=False
 ):
     """Get user input with some requirements"""
     inp = input(text)
@@ -32,6 +32,7 @@ def strict_input(
         (not choices or choices and inp not in choices)
         and (not regex or regex and not match(regex, inp))
         and (not check or check and not check(inp))
+        and (choices or regex or check)
     ):
         if wrong_text:
             inp = input(wrong_text)
