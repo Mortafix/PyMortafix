@@ -14,7 +14,7 @@ def standard_message(update, top_message, bot_name, bot_url):
     now = datetime.now()
     return emojize(
         f"{top_message}\n"
-        f":robot_face: [{bot_name}]({bot_url})\n"
+        f":robot: [{bot_name}]({bot_url})\n"
         f":calendar: {now:%d.%m.%Y}\n"
         f":eight_o’clock: {now:%H:%M}\n"
         f":bust_in_silhouette: {user_mention} (`{user_id}`)\n"
