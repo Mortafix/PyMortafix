@@ -4,11 +4,14 @@ from re import match
 
 from pymortafix.utils import multisub, strict_input
 
-# --- multisub
+# --- utility
 
 
 def force_input(inputs):
     sys.stdin = StringIO(inputs)
+
+
+# --- multisub
 
 
 def test_multisub_no_seq_no_overlap():

@@ -47,6 +47,9 @@ def direct_input(choices=None):
     """Get user single char input w/o return, with optional restricted choices"""
     inkey = _Getch()
     k = inkey()
-    while choices and k not in choices:
+    while (
+        choices
+        and (isinstance(k, str) and k or k.decode(errors="replace")) not in choices
+    ):
         k = inkey()
-    return k
+    return isinstance(k, str) and k or k.decode(errors="replace")
