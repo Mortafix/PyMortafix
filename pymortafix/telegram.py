@@ -2,7 +2,7 @@ import sys
 import traceback
 from datetime import datetime
 
-from colorifix.colorifix import Color, paint
+from colorifix.colorifix import paint
 from emoji import emojize
 
 
@@ -49,10 +49,9 @@ def error_handler(
     user_data = context.user_data if update else "None"
     trace = (exception and exception.__traceback__) or sys.exc_info()[2]
     traceback_error = "".join(traceback.format_tb(trace))
-    traceback_msg = (
-        f"\n{paint(user_data,229)}\n\n"
-        f"{paint(traceback_error,Color.GRAY)}\n"
-        f"> {paint(exception or context.error,Color.RED)}"
+    exp = exception or context.error
+    traceback_msg = paint(
+        f"[#229]{user_data}\n\n[#gray]{traceback_error}" f"[#red]{exp}", False
     )
     if logger:
         logger.warning(traceback_msg)
@@ -64,7 +63,7 @@ def error_handler(
             f"{user_data}\n\n"
             f"{extra_info or '...'}\n\n"
             f"{traceback_error}\n"
-            f"> {exception or context.error}"
+            f"> {exp}"
         )
         send_log(context.bot, channel, message, open("error.log", "r"))
 
