@@ -5,6 +5,20 @@ from datetime import datetime
 from colorifix.colorifix import paint
 from emoji import emojize
 
+# ---- Utils
+
+
+def emz(text):
+    """emojize everything"""
+    if isinstance(text, list):
+        return [emz(t) for t in text]
+    if isinstance(text, dict):
+        return {k: emz(v) for k, v in text.items()}
+    return emojize(text, variant="emoji_type")
+
+
+# ---- Messages
+
 
 def standard_message(update, top_message, bot_name, bot_url):
     """Build a standard log message"""
@@ -73,3 +87,14 @@ def not_authorized_handler(update, context, bot_name, bot_url, channel):
     top_msg = ":face_with_symbols_on_mouth: *NO AUTH USER* :face_with_symbols_on_mouth:"
     message = standard_message(update, top_msg, bot_name, bot_url)
     send_log(context.bot, channel, message)
+
+
+def sentry_log(project, sentry_url, user):
+    """send a telegram log for Sentry"""
+    msg = emz(
+        f":construction: *{project}* :construction:\n\n"
+        f":calendar: {datetime.now():%d.%m.%Y}\n"
+        f":bust_in_silhouette: *{user}*\n"
+        f":microbe: [Sentry Issue]({sentry_url})"
+    )
+    return msg
