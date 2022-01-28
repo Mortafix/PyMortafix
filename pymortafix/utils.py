@@ -3,6 +3,18 @@ from re import findall, match, sub
 from colorifix.colorifix import erase
 from pymortafix._getchar import _Getch
 
+# ---- Dictionary
+
+
+def gets(dictionary, *keys, safety=True):
+    """get multiple key innested dictionary"""
+    for key in keys:
+        dictionary = dictionary.get(key, dict() if safety else None)
+    return dictionary
+
+
+# ---- Substitution
+
 
 def get_sub_from_matching(dictionary, matching):
     index = [i for i, group in enumerate(matching.groups()) if group]
@@ -19,6 +31,9 @@ def multisub(sub_dict, string, sequential=False):
         for rgx, substitution in sub_dict.items():
             string = sub(rgx, substitution, string)
         return string
+
+
+# ---- Input
 
 
 def strict_input(
