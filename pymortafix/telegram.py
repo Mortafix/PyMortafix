@@ -4,6 +4,7 @@ from datetime import datetime
 
 from colorifix.colorifix import paint
 from emoji import emojize
+from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
 
 # ---- Utils
 
@@ -89,12 +90,13 @@ def not_authorized_handler(update, context, bot_name, bot_url, channel):
     send_log(context.bot, channel, message)
 
 
-def sentry_log(project, sentry_url, user):
+def send_sentry_log(token, chat, project_name, project_id, user, extra=None):
     """send a telegram log for Sentry"""
-    msg = emz(
-        f":construction: *{project}* :construction:\n\n"
-        f":calendar: {datetime.now():%d.%m.%Y}\n"
-        f":bust_in_silhouette: *{user}*\n"
-        f":microbe: [Sentry Issue]({sentry_url})"
-    )
-    return msg
+    bot = Bot(token)
+    base_url = "https://sentry.io/organizations/mortafix-inc/issues/?project="
+    sentry_url = f"{base_url}{project_id}"
+    extra_line = extra + "\n" if extra else ""
+    msg = f"🐞 *Project Error* 🐞\n\n🖥 _{project_name}_\n👤 {user}\n{extra_line}"
+    button = InlineKeyboardButton("🦠 Go to Sentry", url=sentry_url)
+    keyboard = InlineKeyboardMarkup([[button]])
+    bot.send_message(chat, msg, reply_markup=keyboard, parse_mode="Markdown")
