@@ -4,7 +4,7 @@ from datetime import datetime
 
 from colorifix.colorifix import paint
 from emoji import emojize
-from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
+from requests import post
 
 # ---- Utils
 
@@ -29,10 +29,10 @@ def standard_message(update, top_message, bot_name, bot_url):
     now = datetime.now()
     return emojize(
         f"{top_message}\n"
-        f":robot: [{bot_name}]({bot_url})\n"
-        f":calendar: {now:%d.%m.%Y}\n"
-        f":eight_o’clock: {now:%H:%M}\n"
-        f":bust_in_silhouette: {user_mention} (`{user_id}`)\n"
+        f"🤖 [{bot_name}]({bot_url})\n"
+        f"📅 {now:%d.%m.%Y}\n"
+        f"🕗 {now:%H:%M}\n"
+        f"👤 {user_mention} (`{user_id}`)\n"
     )
 
 
@@ -85,18 +85,27 @@ def error_handler(
 
 def not_authorized_handler(update, context, bot_name, bot_url, channel):
     """Log an unauthorized access on a Telegram bot"""
-    top_msg = ":face_with_symbols_on_mouth: *NO AUTH USER* :face_with_symbols_on_mouth:"
+    top_msg = "🙊 *NO AUTH USER* 🙈"
     message = standard_message(update, top_msg, bot_name, bot_url)
     send_log(context.bot, channel, message)
 
 
 def send_sentry_log(token, chat, project_name, project_id, user, extra=None):
     """send a telegram log for Sentry"""
-    bot = Bot(token)
-    base_url = "https://sentry.io/organizations/mortafix-inc/issues/?project="
-    sentry_url = f"{base_url}{project_id}"
+    sentry_url = "https://sentry.io/organizations/mortafix-inc/issues/?project="
     extra_line = extra + "\n" if extra else ""
     msg = f"🐞 *Project Error* 🐞\n\n🖥 _{project_name}_\n👤 {user}\n{extra_line}"
-    button = InlineKeyboardButton("🦠 Go to Sentry", url=sentry_url)
-    keyboard = InlineKeyboardMarkup([[button]])
-    bot.send_message(chat, msg, reply_markup=keyboard, parse_mode="Markdown")
+    # api call
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = {
+        "chat_id": chat,
+        "text": msg,
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": [
+                [{"text": "🦠 Go to Sentry", "url": f"{sentry_url}{project_id}"}]
+            ]
+        },
+    }
+    headers = {"Content-Type": "application/json"}
+    return post(url, json=payload, headers=headers)
