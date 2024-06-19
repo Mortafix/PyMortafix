@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pymortafix",
-    version="0.3.0",
+    version="0.3.1",
     author="Moris Doratiotto",
     author_email="moris.doratiotto@gmail.com",
     description="A python module to collect some usefull stuff",
@@ -15,8 +15,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "colorifix==2.0.4",
-        "emoji==2.11.0",
-        "requests==2.31.0",
+        "emoji>=2.11.0",
+        "requests>=2.31.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.12",
